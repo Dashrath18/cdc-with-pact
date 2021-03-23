@@ -25,39 +25,38 @@ pipeline {
       }
     }
 
-    stage('Check Pact Verifications messaging-app') {
+    stage ('Build User-Service') {
       steps {
-        sh 'curl -LO https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.61.1/pact-1.61.1-linux-x86_64.tar.gz'
-        sh 'tar xzf pact-1.61.1-linux-x86_64.tar.gz'
-        dir('pact/bin') {
-          sh "./pact-broker can-i-deploy --retry-while-unknown=12 --retry-interval=10 -a messaging-app -b http://pact-broker-prod.pact-broker.svc.cluster.local:80 -e ${GIT_COMMIT}"
+        dir('user-service') {
+          sh """ 
+          mvn pact:verify \
+          -Dpact.provider.version=${GIT_COMMIT} \
+          -Dpact.verifier.publishResults=true
+          """
         }
       }
     }
     
-    stage('Deploy from messaging app') {
-      when {
-        branch 'master'
-      }
+    stage('Check Pact Verifications messaging-app') {
       steps {
-        echo 'Deploying to prod now...'
-      }
-    }
-
-    stage ('Build User-Service') {
-      steps {
-        dir('user-service') {
-          sh "mvn clean verify"
+        dir('messaging-app'){
+          sh 'curl -LO https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.61.1/pact-1.61.1-linux-x86_64.tar.gz'
+          sh 'tar xzf pact-1.61.1-linux-x86_64.tar.gz'
+          dir('pact/bin') {
+            sh "./pact-broker can-i-deploy --retry-while-unknown=12 --retry-interval=10 -a messaging-app -b http://pact-broker-prod.pact-broker.svc.cluster.local:80 -e ${GIT_COMMIT}"
+          }
         }
       }
     }
 
     stage('Check Pact Verifications') {
       steps {
-        sh 'curl -LO https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.61.1/pact-1.61.1-linux-x86_64.tar.gz'
-        sh 'tar xzf pact-1.61.1-linux-x86_64.tar.gz'
-        dir('pact/bin') {
-          sh "./pact-broker can-i-deploy -a user-service -b http://pact-broker-prod.pact-broker.svc.cluster.local:80 -e ${GIT_COMMIT}"
+        dir('user-service') {
+          sh 'curl -LO https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.61.1/pact-1.61.1-linux-x86_64.tar.gz'
+          sh 'tar xzf pact-1.61.1-linux-x86_64.tar.gz'
+          dir('pact/bin') {
+            sh "./pact-broker can-i-deploy -a user-service -b http://pact-broker-prod.pact-broker.svc.cluster.local:80 -e ${GIT_COMMIT}"
+          }
         }
       }
     }
