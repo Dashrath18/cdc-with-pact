@@ -17,12 +17,11 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@RunWith(PactRunner.class)
+@RunWith(SpringRestPactRunner.class)
 @Provider("user-service")
-@VerificationReports({"console", "markdown"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //pact_broker is the service name in docker-compose
-@PactBroker(host = "pact-broker-prod.pact-broker.svc.cluster.local", port: "80" tags = "${pactbroker.tags:prod}")
+@PactBroker(host = "pact-broker-prod.pact-broker.svc.cluster.local:80", port: "80")
 public class GenericStateWithParameterContractTest {
 
     @TestTarget
