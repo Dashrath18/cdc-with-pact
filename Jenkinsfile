@@ -1,7 +1,7 @@
 #!groovy
 pipeline {
 
-  agent any
+  agent {label "BusinessModule"}
 
   environment {
       BRANCH_NAME=env.GIT_BRANCH.replace("origin/", "")
@@ -12,7 +12,7 @@ pipeline {
     stage('Build') {
       steps {
         dir('messaging-app') {
-           sh 'mvnw clean verify'
+           sh 'mvn clean verify'
         }
       }
     }
@@ -20,7 +20,7 @@ pipeline {
     stage('Publish Pacts') {
       steps {
         dir('messaging-app') {
-           sh 'mvnw pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME}'
+           sh 'mvn pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME}'
         }
       }
     }
@@ -47,7 +47,7 @@ pipeline {
     stage ('Build User-Service') {
       steps {
         dir('user-service') {
-          sh "mvnw clean verify"
+          sh "mvn clean verify"
         }
       }
     }
