@@ -8,6 +8,15 @@ pipeline {
   }
 
   stages {
+    
+    stage('Git Clone') {
+      steps {
+        script {
+          sh "git clone https://github.com/Dashrath18/cdc-with-pact.git"
+        }
+      }
+    }
+
     stage('Build') {
       steps {
         dir('messaging-app') {
@@ -60,7 +69,7 @@ pipeline {
         }
       }
     }
-    
+
     stage('Deploy') {
       when {
         branch 'master'
