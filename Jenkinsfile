@@ -12,7 +12,7 @@ pipeline {
     stage('Build') {
       steps {
         dir('messaging-app') {
-           sh 'mvn clean verify'
+           sh 'mvn clean verify -T 1C'
         }
       }
     }
@@ -20,7 +20,7 @@ pipeline {
     stage('Publish Pacts') {
       steps {
         dir('messaging-app') {
-           sh 'mvn pact:publish -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME}'
+           sh 'mvn pact:publish -T 1C -Dpact.consumer.version=${GIT_COMMIT} -Dpact.tag=${BRANCH_NAME}'
         }
       }
     }
@@ -29,7 +29,7 @@ pipeline {
       steps {
         dir('user-service') {
           sh """ 
-          mvn clean verify \
+          mvn clean verify -T 1C \
           -Dpact.provider.version=${GIT_COMMIT} \
           -Dpact.verifier.publishResults=true
           """
