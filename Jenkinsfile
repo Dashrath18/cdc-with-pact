@@ -29,7 +29,7 @@ pipeline {
       steps {
         dir('user-service') {
           sh """ 
-          mvn pact:verify \
+          mvn clean verify \
           -Dpact.provider.version=${GIT_COMMIT} \
           -Dpact.verifier.publishResults=true
           """
