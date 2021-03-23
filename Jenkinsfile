@@ -25,7 +25,7 @@ pipeline {
       }
     }
 
-    stage('Check Pact Verifications') {
+    stage('Check Pact Verifications messaging-app') {
       steps {
         sh 'curl -LO https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.61.1/pact-1.61.1-linux-x86_64.tar.gz'
         sh 'tar xzf pact-1.61.1-linux-x86_64.tar.gz'
@@ -35,7 +35,7 @@ pipeline {
       }
     }
     
-    stage('Deploy') {
+    stage('Deploy from messaging app') {
       when {
         branch 'master'
       }
@@ -44,7 +44,7 @@ pipeline {
       }
     }
 
-    stage ('Build') {
+    stage ('Build User-Service') {
       steps {
         dir('user-service') {
           sh "./mvnw clean verify"
@@ -62,7 +62,7 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy user Service') {
       when {
         branch 'master'
       }
