@@ -17,7 +17,7 @@ pipeline {
 
     stage('Build') {
       when { 
-        expression { retrun param.BRANCH_TO_BUILD == "DASH"}
+        expression { return BRANCH_TO_BUILD == "DASH"}
       }
       steps {
         dir('messaging-app') {
@@ -28,7 +28,7 @@ pipeline {
 
     stage('Publish Pacts') {
        when { 
-        expression { retrun param.BRANCH_TO_BUILD == "DASH"}
+        expression { return BRANCH_TO_BUILD == "DASH"}
       }
       steps {
         dir('messaging-app') {
@@ -39,7 +39,7 @@ pipeline {
 
     stage ('Build User-Service') {
       when { 
-        expression { retrun param.BRANCH_TO_BUILD == "MUND"}
+        expression { return BRANCH_TO_BUILD == "MUND"}
       }
       steps {
         dir('user-service') {
@@ -54,7 +54,7 @@ pipeline {
 
     stage('Check Pact Verifications') {
       when { 
-        expression { retrun param.BRANCH_TO_BUILD == "MUND"}
+        expression { return BRANCH_TO_BUILD == "MUND"}
       }
       steps {
         dir('user-service') {
